@@ -1,13 +1,20 @@
 import React, { useEffect, useState } from 'react';
 import { View, StyleSheet, Text, SafeAreaView, StatusBar, Button, Alert, TouchableOpacity } from 'react-native';
 import AppHeader from '../../My_components/Header/AppHeader';
-import { Poppins_Bold, Poppins_Regular, theme_clr_1_2, theme_clr_1_2_bright, theme_clr_2, theme_clr_3 } from '../../../style_sheet/styles';
+import { app_theme_clr_transparent_white, Poppins_Bold, Poppins_Regular, theme_clr_1_2, theme_clr_1_2_bright, theme_clr_2, theme_clr_3 } from '../../../style_sheet/styles';
 import WifiManager from "react-native-wifi-reborn";
 import IconComponent from '../../My_components/Icon_Component/IconComponent';
 import { requestLocationPermission } from '../../Permissions/PermissionsFlie';
 import AddAndSendFileView from '../../My_components/View_Blocks/AddAndSendFileView';
+import { useNavigation } from '@react-navigation/native'
+import AppButton from '../../My_components/Buttons/AppButton';
 
-const HomePage = () => {
+
+const HomePage = ({ route = false }) => {
+
+  const { refresh_wifi_details_trigger = false } = route.params || {};
+
+  const navigation = useNavigation();
 
   const [connectedWifi, setConnectedWifi] = useState({ ssid: `--`, signal_strength: `--`, status: `--`, frequency: `--` });
 
@@ -77,16 +84,21 @@ const HomePage = () => {
 
 
   useEffect(() => {
-    getConnectedWifiDetails();
-    console.log(connectedWifi);
+    if (refresh_wifi_details_trigger) {
+      console.log('okokoko');
 
-  }, []);
+      getConnectedWifiDetails();
+    }
+  }, [refresh_wifi_details_trigger]);
 
-  // useEffect(() => {
-  //   console.log(connectedWifi);
-  //   // verifyHandShake();
+  useEffect(() => {
+    if (refresh_wifi_details_trigger) {
+      console.log('Trigger received:', refresh_wifi_details_trigger);
+      // verifyHandShake();
+    }
+  }, [refresh_wifi_details_trigger])
 
-  // }, [connectedWifi])
+
 
 
   return (
@@ -104,15 +116,31 @@ const HomePage = () => {
 
       <View style={styles.connected_wifi_block}>
 
+        {/* <Text>{JSON.stringify(connectedWifi,2,null).toString()}</Text> */}
+
         <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
           <Text style={styles.connected_wifi_text}>Connected Wi-Fi</Text>
 
-          <TouchableOpacity
+          {/* <TouchableOpacity
             style={styles.btn_}
             onPress={() => getConnectedWifiDetails()}>
             <IconComponent name={'Feather'} icon={'refresh-ccw'} size={18} color='#fff' />
-          </TouchableOpacity>
+          </TouchableOpacity> */}
 
+          <View style={{ alignSelf: 'flex-end', marginBottom: 5 }}>
+            <AppButton
+              on_press={() => navigation.navigate('SettingsPage', { scantrigger: true })}
+              text_color="#fff"
+              background_color={theme_clr_1_2}
+              boxwidth={20}
+              border={10}
+              border_color={app_theme_clr_transparent_white}
+              fsize={15}
+              text={"SCAN"}
+              btn_height={2}
+            // disabled={isCooldown}
+            />
+          </View>
 
         </View>
 
@@ -125,7 +153,7 @@ const HomePage = () => {
               </Text>
 
               <Text style={[styles.connected_device_data, { position: 'absolute', right: 0 }]}>Status :
-                <Text style={{ color: theme_clr_1_2_bright }}> {connectedWifi.status == true ? `Avalible` : `Not-Avalible`}</Text>
+                <Text style={{ color: theme_clr_1_2_bright }}> {connectedWifi.status == true || connectedWifi.ip == '192.168.4.1' || connectedWifi.ip == '192.168.4.2'  ? `Avalible` : `Not-Avalible`}</Text>
               </Text>
             </View>
 

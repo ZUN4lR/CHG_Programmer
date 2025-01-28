@@ -1,9 +1,9 @@
 import { StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
 import React, { useState } from 'react'
-import { app_clr_white, Poppins_Regular, theme_clr_1 } from '../../../style_sheet/styles'
+import { app_clr_white, Poppins_Regular, theme_clr_1, theme_clr_1_2 } from '../../../style_sheet/styles'
 import IconComponent from '../Icon_Component/IconComponent'
 
-const Textinput = ({ set_val,value=0, type = 'default', current=0, place_holder, bg_color, iconfrom, icon }) => {
+const Textinput = ({ set_val,value=0, type = 'default', current=0, place_holder, bg_color, iconfrom, icon,icon_color=theme_clr_1 }) => {
 
   const [secureTextEntry, setSecureTextEntry] = useState(true);
   const [focus, setFocus] = useState(false);
@@ -12,7 +12,7 @@ const Textinput = ({ set_val,value=0, type = 'default', current=0, place_holder,
     <View style={[styles.mainview, {marginTop:current?12:null,
       borderTopLeftRadius:current?0:null,
       backgroundColor: bg_color ? bg_color : '#2b2b2b',
-      borderColor: focus ? theme_clr_1 : '#6a6a6a'
+      borderColor: focus ? theme_clr_1_2: '#6a6a6a'
     }]}>
      {current &&
       <View style={{ backgroundColor: '#6a6a6a',borderTopRightRadius:30,borderTopLeftRadius:10, position: 'absolute',left:-1, top: -16, paddingHorizontal: 20 }}>
@@ -35,13 +35,13 @@ const Textinput = ({ set_val,value=0, type = 'default', current=0, place_holder,
           onPress={() => setSecureTextEntry(!secureTextEntry)}
           style={{ padding: 5 }}>
           {!secureTextEntry ?
-            <IconComponent name={'Ionicons'} icon={'eye-outline'} size={20} color={'orange'} /> :
-            <IconComponent name={'Ionicons'} icon={'eye-off-outline'} size={20} color={'orange'} />
+            <IconComponent name={'Ionicons'} icon={'eye-outline'} size={20} color={icon_color} /> :
+            <IconComponent name={'Ionicons'} icon={'eye-off-outline'} size={20} color={icon_color} />
           }
         </TouchableOpacity>
         : icon ?
           <View style={{ padding: 5 }}>
-            <IconComponent name={iconfrom} icon={icon} size={20} color={'orange'} />
+            <IconComponent name={iconfrom} icon={icon} size={20} color={icon_color} />
           </View>
           : null
       }
@@ -59,7 +59,7 @@ const styles = StyleSheet.create({
 
   },
   text_input: {
-    color: theme_clr_1,
+    color: '#fff',
     fontSize: 15,
     padding: 8,
     letterSpacing: 1,

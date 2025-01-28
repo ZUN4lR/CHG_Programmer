@@ -1,9 +1,9 @@
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import React from 'react'
-import { Poppins_Bold, theme_clr_2, theme_clr_3, width } from '../../../style_sheet/styles'
+import { app_name_, Poppins_Bold, theme_clr_2, theme_clr_3, width } from '../../../style_sheet/styles'
 import IconComponent from '../Icon_Component/IconComponent'
 import {useNavigation} from '@react-navigation/native'
-const GoBackHeader = () => {
+const GoBackHeader = ({header_text=app_name_}) => {
 
     const navigation=useNavigation();
 
@@ -16,7 +16,10 @@ const GoBackHeader = () => {
                 <IconComponent name={'MaterialIcons'} icon={'arrow-back'} size={15} color='#fff' />
             </TouchableOpacity>
 
-            <Text style={{fontSize:20,fontFamily:Poppins_Bold,color:theme_clr_2}}>Settings</Text>
+            <Text style={{fontSize:20,fontFamily:Poppins_Bold,color:theme_clr_2}}>{header_text}</Text>
+       
+
+
         </View>
     )
 }

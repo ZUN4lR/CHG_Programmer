@@ -10,8 +10,9 @@ import SimpleProgressBar from '../ProgressBar/SimpleProgressBar';
 import { generateRandomNumbers } from '../../../HelperFunctions/Functions';
 import WifiManager from 'react-native-wifi-reborn'; // Ensure you have this import for WifiManager
 import ReceiveSharingIntent from 'react-native-receive-sharing-intent';
+import { saveFileToCHGProgrammerFolder } from '../../../HelperFunctions/App_Local_Storage/Storage_Functions';
 
-const AddAndSendFileView = () => {
+const AddAndSendFileView = ({wifi_details}) => {
 
     const [show_progress_bar, setShow_progress_bar] = useState(false);
     const [selectedFile, setSelectedFile] = useState(null);
@@ -128,11 +129,12 @@ const AddAndSendFileView = () => {
 
     const uploadAndCheckFile = async () => {
         try {
+            // await uploadFile();
 
-            const localIP = await WifiManager.getIP();
-            console.log('ipppppp:', localIP);
+            // const localIP = await WifiManager.getIP();
+            // console.log('ipppppp:', localIP);
 
-            if (localIP === '192.168.4.1' || localIP === '192.168.4.2') {
+            if (wifi_details.ip === '192.168.4.1' || wifi_details.ip === '192.168.4.2') {
                 const isESP32Available = await checkESP32Availability();
 
                 if (isESP32Available) {
@@ -166,16 +168,16 @@ const AddAndSendFileView = () => {
                         fileName = `${fileName.replace(/\.$/, '')}${extension}`;
                     }
 
-                      return { ...file, fileName };
+                    return { ...file, fileName };
 
                 });
 
-                console.log('Updated Files:', updatedFiles); 
+                console.log('Updated Files:', updatedFiles);
 
                 if (!updatedFiles[0].fileName.includes('.bin')) {
                     setSelectedFile(null);
                     Alert.alert('Please select a valid file');
-    
+
                 } else {
                     setSelectedFile({
                         uri: updatedFiles[0].contentUri,
@@ -200,13 +202,22 @@ const AddAndSendFileView = () => {
     return (
         <View style={styles.overlay}>
 
-{show_progress_bar &&
-            <SimpleProgressBar visible={show_progress_bar} total={100} />
-}
+            {show_progress_bar &&
+                <SimpleProgressBar visible={show_progress_bar} total={100} />
+            }
+
 
             <TouchableOpacity
                 onPress={() => selectFile()}
                 style={[styles.addfile, { backgroundColor: selectedFile ? theme_clr_1_2 : app_clr_theme_light }]}>
+
+                {selectedFile &&
+                    <TouchableOpacity
+                        onPress={() => saveFileToCHGProgrammerFolder(selectedFile)}
+                        style={[styles.save_btn]}>
+                        <Text style={{ fontSize: 15, color: '#fff', fontFamily: Poppins_Bold }}>SAVE</Text>
+                    </TouchableOpacity>
+                }
 
                 {selectedFile ?
                     <View style={{ flexDirection: 'row', alignItems: 'center' }}>
@@ -237,6 +248,8 @@ const AddAndSendFileView = () => {
                     <AppButton
                         on_press={() => uploadAndCheckFile()}
                         text_color="#fff" background_color={theme_clr_1_2} boxwidth={12} border={10} fsize={15} text="Update Firmware" btn_height={5} />
+
+
                     <Text style={[styles.not_avalible_text, { color: dark_white, fontSize: 12 }]}>Make sure your <Text style={{ color: theme_clr_1_2_bright, fontFamily: Poppins_Bold }}>Location</Text> is ENABLED & <Text style={{ color: theme_clr_1_2_bright, fontFamily: Poppins_Bold }}>WiFi</Text> is connected to same DEVICE !!</Text>
                 </>
             }
@@ -260,7 +273,8 @@ const styles = StyleSheet.create({
         borderRadius: 15,
         borderWidth: .5,
         borderColor: dark_white,
-        alignItems: 'center'
+        alignItems: 'center',
+        overflow: 'hidden'
     },
     filename: {
         fontSize: 18,
@@ -281,5 +295,16 @@ const styles = StyleSheet.create({
         alignSelf: 'center',
         textAlign: 'center',
         color: theme_clr_1,
+    },
+    save_btn: {
+        backgroundColor: theme_clr_3,
+        position: 'absolute',
+        alignSelf: 'flex-end',
+        borderBottomLeftRadius: 10,
+        paddingHorizontal: 30,
+        paddingVertical: 2,
+        borderLeftWidth: .5,
+        borderBottomWidth: .5,
+        borderColor: dark_white
     },
 })

@@ -6,12 +6,12 @@ import IconComponent from '../Icon_Component/IconComponent';
 
 const { height, width } = Dimensions.get('screen');
 
-const AppButton = ({ on_press,disabled=false, text, fsize=15, boxwidth, fstyle, text_color, border, btn_height, background_color, iconfrom, icon, icon_color }) => {
+const AppButton = ({ on_press,disabled=false, text, fsize=15, boxwidth, fstyle, text_color, border,border_color=null, btn_height, background_color, iconfrom, icon, icon_color }) => {
     return (
         <TouchableOpacity
         disabled={disabled}
         style={[styles._btn, {
-            justifyContent: icon ? 'space-between' : 'center', borderRadius: border ? border : null, paddingVertical: btn_height ? btn_height : null, paddingHorizontal: boxwidth ? boxwidth : width / 20, backgroundColor: background_color ? background_color : theme_clr_1
+            justifyContent: icon ? 'space-between' : 'center', borderRadius: border ? border : null,borderWidth:border_color?1:null,borderColor:border_color, paddingVertical: btn_height ? btn_height : null, paddingHorizontal: boxwidth ? boxwidth : width / 20, backgroundColor: background_color ? background_color : theme_clr_1
         }]}
             onPress={on_press}>
             <Text style={{ fontSize: fsize, fontFamily: fstyle == 'regular' ? 'Poppins-Regular' : 'Poppins-Bold', color: text_color ? text_color : '#0000009f' }}>{text}</Text>

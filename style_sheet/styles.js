@@ -1,5 +1,7 @@
 import { StyleSheet, Dimensions } from "react-native";
 
+export const app_name_ = 'CHG Programmer';
+
 
 export const width = Dimensions.get('window').width;
 export const height = Dimensions.get('window').height;
